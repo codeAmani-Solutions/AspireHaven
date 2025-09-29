@@ -11,10 +11,95 @@
         /* Base styling */
         body {
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll from device frames */
         }
         /* Smooth transitions for color changes */
         * {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Main content container */
+        #app-container {
+            transition: all 0.5s ease-in-out;
+        }
+        
+        /* Device Preview Styles */
+        #preview-wrapper {
+            transition: all 0.5s ease-in-out;
+            padding-top: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .device-btn.active {
+            background-color: #3B82F6; /* brand-light */
+            color: white;
+        }
+        .dark .device-btn.active {
+            background-color: #60A5FA; /* brand-dark */
+        }
+
+        /* Mobile Frame */
+        .preview-mobile {
+            max-width: 391px; /* 375 + 8*2 */
+            height: 812px;
+            border: 8px solid #111;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+            background: #111;
+            padding: 0;
+        }
+        .preview-mobile #app-container {
+            height: 100%;
+            overflow-y: auto;
+            border-radius: 32px;
+        }
+
+        /* Tablet Frame */
+        .preview-tablet {
+            max-width: 792px; /* 768 + 12*2 */
+            height: 1048px;
+            border: 12px solid #111;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+            background: #111;
+            padding: 0;
+        }
+        .preview-tablet #app-container {
+            height: 100%;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+
+        /* Desktop Frame */
+        .preview-desktop {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            background: transparent;
+        }
+        .preview-desktop #app-container {
+            height: auto;
+            overflow-y: visible;
+            border-radius: 0;
+        }
+
+        /* Custom scrollbar for webkit browsers in preview */
+        .preview-mobile #app-container::-webkit-scrollbar, 
+        .preview-tablet #app-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .preview-mobile #app-container::-webkit-scrollbar-track, 
+        .preview-tablet #app-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .preview-mobile #app-container::-webkit-scrollbar-thumb, 
+        .preview-tablet #app-container::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.5); /* gray-400 with opacity */
+            border-radius: 20px;
         }
     </style>
     <script>
@@ -52,195 +137,222 @@
         }
     </script>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark">
+<body class="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark pb-24">
 
-    <!-- Main Container -->
-    <div id="app-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Preview Wrapper -->
+    <div id="preview-wrapper">
+        <!-- Main Container -->
+        <div id="app-container" class="w-full mx-auto bg-surface-light dark:bg-surface-dark">
 
-        <!-- Header Container -->
-        <header class="container mx-auto py-6">
-            <div class="flex justify-between items-center">
-                <!-- Business Name/Brand Container -->
-                <div class="container">
-                    <h1 data-lang="brand" class="text-2xl md:text-3xl font-bold text-brand-light dark:text-brand-dark">Aspire Haven Group Homes</h1>
-                </div>
+            <!-- Header Container -->
+            <header class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 relative">
+                <div class="flex justify-between items-center">
+                    <!-- Business Name/Brand Container -->
+                    <div class="container">
+                        <h1 data-lang="brand" class="text-xl md:text-3xl font-bold text-brand-light dark:text-brand-dark">Aspire Haven Group Homes</h1>
+                    </div>
 
-                <!-- Menu and Toggles Container -->
-                <div class="flex items-center space-x-4">
-                    <!-- Menu Tabs -->
-                    <nav class="hidden md:flex space-x-2">
-                        <div class="container"><a href="#services" data-lang="nav_services" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Services</a></div>
-                        <div class="container"><a href="#location" data-lang="nav_location" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Location</a></div>
-                        <div class="container"><a href="#contact" data-lang="nav_contact" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Contact</a></div>
-                    </nav>
+                    <!-- Menu and Toggles Container -->
+                    <div class="flex items-center space-x-2">
+                        <!-- Desktop Menu Tabs -->
+                        <nav id="desktop-nav" class="hidden md:flex space-x-2">
+                            <div class="container"><a href="#services" data-lang="nav_services" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Services</a></div>
+                            <div class="container"><a href="#location" data-lang="nav_location" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Location</a></div>
+                            <div class="container"><a href="#contact" data-lang="nav_contact" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Contact</a></div>
+                        </nav>
 
-                    <!-- Toggles Wrapper -->
-                    <div class="flex items-center space-x-2 border-l border-gray-200 dark:border-gray-700 pl-4">
-                         <!-- Theme Toggle Container -->
-                        <div class="container flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-full">
-                            <button id="light-theme-btn" class="p-1.5 rounded-full bg-white shadow">
-                                <i data-lucide="sun" class="h-5 w-5 text-yellow-500"></i>
+                        <!-- Toggles Wrapper -->
+                        <div class="flex items-center space-x-2 md:border-l md:border-gray-200 md:dark:border-gray-700 md:pl-2">
+                             <!-- Theme Toggle Container -->
+                            <div class="container flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-full">
+                                <button id="light-theme-btn" class="p-1.5 rounded-full">
+                                    <i data-lucide="sun" class="h-5 w-5 text-yellow-500"></i>
+                                </button>
+                                <button id="dark-theme-btn" class="p-1.5 rounded-full">
+                                    <i data-lucide="moon" class="h-5 w-5 text-gray-400"></i>
+                                </button>
+                            </div>
+                            <!-- Language Toggle Container -->
+                            <div class="container flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-full text-sm font-medium">
+                                <button id="lang-en-btn" class="px-3 py-1 rounded-full">EN</button>
+                                <button id="lang-es-btn" class="px-3 py-1 rounded-full">ES</button>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Menu Button -->
+                        <div id="mobile-menu-container" class="md:hidden">
+                            <button id="mobile-menu-btn" class="p-2 rounded-md text-gray-500 dark:text-gray-400">
+                                <i id="menu-open-icon" data-lucide="menu" class="h-6 w-6"></i>
+                                <i id="menu-close-icon" data-lucide="x" class="h-6 w-6 hidden"></i>
                             </button>
-                            <button id="dark-theme-btn" class="p-1.5 rounded-full">
-                                <i data-lucide="moon" class="h-5 w-5 text-gray-400"></i>
-                            </button>
-                        </div>
-                        <!-- Language Toggle Container -->
-                        <div class="container flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-full text-sm font-medium">
-                            <button id="lang-en-btn" class="px-3 py-1 rounded-full bg-white shadow text-gray-800">EN</button>
-                            <button id="lang-es-btn" class="px-3 py-1 rounded-full text-gray-400">ES</button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="mt-10">
+                <!-- Mobile Menu (Dropdown) -->
+                <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 z-40 px-4">
+                    <div class="mt-2 bg-surface-light dark:bg-surface-dark rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <nav class="flex flex-col space-y-1 p-2">
+                            <a href="#services" data-lang="nav_services" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-base">Services</a>
+                            <a href="#location" data-lang="nav_location" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-base">Location</a>
+                            <a href="#contact" data-lang="nav_contact" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-base">Contact</a>
+                        </nav>
+                    </div>
+                </div>
+            </header>
 
-            <!-- Hero Section Container -->
-            <section class="container mx-auto text-center py-16 md:py-24">
+            <!-- Main Content -->
+            <main class="mt-10 px-4 sm:px-6 lg:px-8">
+
+                <!-- Hero Section Container -->
+                <section class="container mx-auto text-center py-16 md:py-24">
+                    <div class="container">
+                        <h2 data-lang="hero_title" class="text-4xl md:text-6xl font-bold text-brand-light dark:text-brand-dark">A Caring & Supportive Home</h2>
+                    </div>
+                    <div class="container mt-4">
+                        <p data-lang="hero_subtitle" class="text-lg md:text-xl max-w-3xl mx-auto text-text-secondary-light dark:text-text-secondary-dark">
+                            Delivering comprehensive, person-centered care in a supportive environment for individuals with intellectual and developmental disabilities in Jacksonville, Florida.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Our Commitment Section -->
+                <section class="container mx-auto py-16">
+                     <div class="text-center bg-white dark:bg-gray-800 p-8 md:p-12 rounded-xl shadow-md">
+                         <div class="container">
+                            <h3 data-lang="commitment_title" class="text-3xl md:text-4xl font-bold">Our Commitment to Care</h3>
+                        </div>
+                        <div class="container mt-4">
+                            <p data-lang="commitment_text" class="text-lg max-w-4xl mx-auto text-text-secondary-light dark:text-text-secondary-dark">
+                                We work hard to serve you and your loved ones. Our staff has many years of experience, and our high-quality care and dedication to the growth of our consumers best describes our main focus. We proudly offer high-quality support tailored to each individual's needs.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Waivers Section Container -->
+                <section class="container mx-auto py-16">
+                    <div class="container text-center mb-12">
+                        <h3 data-lang="waivers_title" class="text-3xl md:text-4xl font-bold">Waivers & Funding</h3>
+                        <p data-lang="waivers_subtitle" class="mt-2 text-text-secondary-light dark:text-text-secondary-dark">Flexible options to access our comprehensive care.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Waiver Item 1 -->
+                        <div class="container bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
+                            <div class="mx-auto bg-blue-100 dark:bg-blue-900/50 p-3 rounded-lg w-fit mb-4"><i data-lucide="file-text" class="h-8 w-8 text-brand-light dark:text-brand-dark"></i></div>
+                            <h4 data-lang="waiver_1_title" class="text-lg font-semibold">HCBS Waiver</h4>
+                            <p data-lang="waiver_1_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">Supporting individuals with comprehensive home and community-based services.</p>
+                        </div>
+                        <!-- Waiver Item 2 -->
+                        <div class="container bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
+                            <div class="mx-auto bg-green-100 dark:bg-green-900/50 p-3 rounded-lg w-fit mb-4"><i data-lucide="notebook-tabs" class="h-8 w-8 text-green-500 dark:text-green-400"></i></div>
+                            <h4 data-lang="waiver_2_title" class="text-lg font-semibold">iBudget Florida Program</h4>
+                            <p data-lang="waiver_2_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">APD's program offering flexibility and choice in managing waiver services.</p>
+                        </div>
+                        <!-- Waiver Item 3 -->
+                        <div class="container bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
+                            <div class="mx-auto bg-purple-100 dark:bg-purple-900/50 p-3 rounded-lg w-fit mb-4"><i data-lucide="credit-card" class="h-8 w-8 text-purple-500 dark:text-purple-400"></i></div>
+                            <h4 data-lang="waiver_3_title" class="text-lg font-semibold">Private Pay</h4>
+                            <p data-lang="waiver_3_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">Direct payment options are available for our range of support services.</p>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Location & Contact Section Container -->
+                <section id="location" class="container mx-auto pt-16">
+                     <div class="container text-center mb-12">
+                        <h3 data-lang="location_title" class="text-3xl md:text-4xl font-bold">Find & Contact Us</h3>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden lg:grid lg:grid-cols-2 lg:gap-4">
+                        <div class="pt-10 pb-12 px-6 sm:pt-16 sm:px-12 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
+                            <div class="lg:self-center">
+                                <div class="container">
+                                    <h4 data-lang="address_title" class="text-2xl font-bold">Our Location</h4>
+                                    <p class="mt-2 text-lg leading-6 text-text-secondary-light dark:text-text-secondary-dark">12708 San Jose Blvd, Ste 1A<br>Jacksonville, FL 32223</p>
+                                </div>
+                                <div class="container mt-8" id="contact">
+                                    <h4 data-lang="contact_title" class="text-2xl font-bold">Contact Information</h4>
+                                    <p class="mt-2 text-lg text-text-secondary-light dark:text-text-secondary-dark">
+                                        <span data-lang="phone_label" class="font-semibold">Phone:</span> 770-318-2828<br>
+                                        <span data-lang="fax_label" class="font-semibold">Fax:</span> 888-846-6014
+                                    </p>
+                                </div>
+
+                                <!-- Contact Form Container -->
+                                <div class="container mt-8">
+                                    <h4 data-lang="form_title" class="text-2xl font-bold">Get in Touch</h4>
+                                    <!-- NOTE: This is a visual form for demonstration. It does not send data without a backend service. -->
+                                    <form action="#" method="POST" class="mt-4 space-y-4">
+                                        <div>
+                                            <label for="name" data-lang="form_name_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Full Name</label>
+                                            <div class="mt-1">
+                                                <input type="text" name="name" id="name" autocomplete="name" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="John Doe">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="email" data-lang="form_email_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Email Address</label>
+                                            <div class="mt-1">
+                                                <input type="email" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="you@example.com">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="message" data-lang="form_message_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Message</label>
+                                            <div class="mt-1">
+                                                <textarea id="message" name="message" rows="4" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="Your message..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-light hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-light dark:bg-brand-dark dark:hover:bg-blue-500">
+                                                <span data-lang="form_submit_btn">Send Message</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="container mt-8 flex flex-col sm:flex-row gap-3">
+                                    <a href="https://maps.apple.com/?address=12708,San%20Jose%20Blvd,Ste%201A,Jacksonville,FL,32223,United%20States" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-white">
+                                        <i data-lucide="apple" class="h-5 w-5 mr-2"></i>
+                                        <span data-lang="apple_maps_btn">Apple Maps</span>
+                                    </a>
+                                    <a href="https://www.google.com/maps/search/?api=1&query=12708+San+Jose+Blvd+Ste+1A,+Jacksonville,+FL+32223" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-light hover:bg-blue-700 dark:bg-brand-dark dark:hover:bg-blue-500">
+                                        <i data-lucide="map-pin" class="h-5 w-5 mr-2"></i>
+                                        <span data-lang="google_maps_btn">Google Maps</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aspect-w-5 aspect-h-3 md:aspect-w-2 md:aspect-h-1 lg:aspect-h-3 lg:aspect-w-2">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3448.910398863643!2d-81.6212168853755!3d30.182559781831037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e5cb8e3e4a2e5f%3A0x8d5c48b7f8303358!2s12708%20San%20Jose%20Blvd%20%231a%2C%20Jacksonville%2C%20FL%2032223!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Footer Container -->
+            <footer class="container mx-auto text-center py-8 border-t border-gray-200 dark:border-gray-700 mt-10">
                 <div class="container">
-                    <h2 data-lang="hero_title" class="text-4xl md:text-6xl font-bold text-brand-light dark:text-brand-dark">A Caring & Supportive Home</h2>
+                    <p data-lang="footer_text" class="text-text-secondary-light dark:text-text-secondary-dark">&copy; 2024 Aspire Haven Group Homes. All Rights Reserved.</p>
                 </div>
-                <div class="container mt-4">
-                    <p data-lang="hero_subtitle" class="text-lg md:text-xl max-w-3xl mx-auto text-text-secondary-light dark:text-text-secondary-dark">
-                        Providing exceptional residential care and support for individuals with intellectual and developmental disabilities in Jacksonville, Florida.
-                    </p>
-                </div>
-            </section>
-
-            <!-- Services Section Container -->
-            <section id="services" class="container mx-auto py-16">
-                <div class="container text-center mb-12">
-                    <h3 data-lang="services_title" class="text-3xl md:text-4xl font-bold">Our Specialized Services</h3>
-                    <p data-lang="services_subtitle" class="mt-2 text-text-secondary-light dark:text-text-secondary-dark">Dedicated care tailored to individual needs.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Service Item 1 -->
-                    <div class="container bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-md">
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-lg"><i data-lucide="home" class="h-6 w-6 text-brand-light dark:text-brand-dark"></i></div>
-                            <h4 data-lang="service_1_title" class="text-lg font-semibold">Residential Treatment</h4>
-                        </div>
-                        <p data-lang="service_1_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">For intellectual and/or developmental disabilities.</p>
-                    </div>
-                    <!-- Service Item 2 -->
-                    <div class="container bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-md">
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-green-100 dark:bg-green-900/50 p-3 rounded-lg"><i data-lucide="users" class="h-6 w-6 text-green-500 dark:text-green-400"></i></div>
-                            <h4 data-lang="service_2_title" class="text-lg font-semibold">Adult Companion</h4>
-                        </div>
-                        <p data-lang="service_2_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">Providing friendship and support for daily activities.</p>
-                    </div>
-                    <!-- Service Item 3 -->
-                    <div class="container bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-md">
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-purple-100 dark:bg-purple-900/50 p-3 rounded-lg"><i data-lucide="shield-plus" class="h-6 w-6 text-purple-500 dark:text-purple-400"></i></div>
-                            <h4 data-lang="service_3_title" class="text-lg font-semibold">Assisted Living & Behavioral Care</h4>
-                        </div>
-                        <p data-lang="service_3_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">Support for individuals with behavioral disturbances.</p>
-                    </div>
-                    <!-- Service Item 4 -->
-                    <div class="container bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-md">
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-yellow-100 dark:bg-yellow-900/50 p-3 rounded-lg"><i data-lucide="brain-circuit" class="h-6 w-6 text-yellow-500 dark:text-yellow-400"></i></div>
-                            <h4 data-lang="service_4_title" class="text-lg font-semibold">Behavior Analyst</h4>
-                        </div>
-                        <p data-lang="service_4_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">Professional analysis and behavior management plans.</p>
-                    </div>
-                     <!-- Service Item 5 -->
-                    <div class="container bg-surface-light dark:bg-surface-dark p-6 rounded-xl shadow-md">
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-red-100 dark:bg-red-900/50 p-3 rounded-lg"><i data-lucide="heart-pulse" class="h-6 w-6 text-red-500 dark:text-red-400"></i></div>
-                            <h4 data-lang="service_5_title" class="text-lg font-semibold">Community & Behavioral Health</h4>
-                        </div>
-                        <p data-lang="service_5_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">Integrating residents into the community with health support.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Location & Contact Section Container -->
-            <section id="location" class="container mx-auto py-16">
-                 <div class="container text-center mb-12">
-                    <h3 data-lang="location_title" class="text-3xl md:text-4xl font-bold">Find Us</h3>
-                </div>
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-md overflow-hidden lg:grid lg:grid-cols-2 lg:gap-4">
-                    <div class="pt-10 pb-12 px-6 sm:pt-16 sm:px-12 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
-                        <div class="lg:self-center">
-                            <div class="container">
-                                <h4 data-lang="address_title" class="text-2xl font-bold">Our Location</h4>
-                                <p class="mt-2 text-lg leading-6 text-text-secondary-light dark:text-text-secondary-dark">12708 San Jose Blvd, Ste 1A<br>Jacksonville, FL 32223</p>
-                            </div>
-                            <div class="container mt-8" id="contact">
-                                <h4 data-lang="contact_title" class="text-2xl font-bold">Contact Information</h4>
-                                <p class="mt-2 text-lg text-text-secondary-light dark:text-text-secondary-dark">
-                                    <span data-lang="phone_label" class="font-semibold">Phone:</span> 770-318-2828<br>
-                                    <span data-lang="fax_label" class="font-semibold">Fax:</span> 888-846-6014
-                                </p>
-                            </div>
-
-                            <!-- Contact Form Container -->
-                            <div class="container mt-8">
-                                <h4 data-lang="form_title" class="text-2xl font-bold">Get in Touch</h4>
-                                <!-- NOTE: This is a visual form for demonstration. It does not send data without a backend service. -->
-                                <form action="#" method="POST" class="mt-4 space-y-4">
-                                    <div>
-                                        <label for="name" data-lang="form_name_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Full Name</label>
-                                        <div class="mt-1">
-                                            <input type="text" name="name" id="name" autocomplete="name" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-surface-light dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="John Doe">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="email" data-lang="form_email_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Email Address</label>
-                                        <div class="mt-1">
-                                            <input type="email" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-surface-light dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="you@example.com">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="message" data-lang="form_message_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Message</label>
-                                        <div class="mt-1">
-                                            <textarea id="message" name="message" rows="4" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-surface-light dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="Your message..."></textarea>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-light hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-light dark:bg-brand-dark dark:hover:bg-blue-500">
-                                            <span data-lang="form_submit_btn">Send Message</span>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="container mt-8 flex flex-col sm:flex-row gap-3">
-                                <a href="https://maps.apple.com/?address=12708,San%20Jose%20Blvd,Ste%201A,Jacksonville,FL,32223,United%20States" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-white">
-                                    <i data-lucide="apple" class="h-5 w-5 mr-2"></i>
-                                    <span data-lang="apple_maps_btn">Apple Maps</span>
-                                </a>
-                                <a href="https://www.google.com/maps/search/?api=1&query=12708+San+Jose+Blvd+Ste+1A,+Jacksonville,+FL+32223" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-light hover:bg-blue-700 dark:bg-brand-dark dark:hover:bg-blue-500">
-                                    <i data-lucide="map-pin" class="h-5 w-5 mr-2"></i>
-                                    <span data-lang="google_maps_btn">Google Maps</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="aspect-w-5 aspect-h-3 md:aspect-w-2 md:aspect-h-1 lg:aspect-h-3 lg:aspect-w-2">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3448.910398863643!2d-81.6212168853755!3d30.182559781831037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e5cb8e3e4a2e5f%3A0x8d5c48b7f8303358!2s12708%20San%20Jose%20Blvd%20%231a%2C%20Jacksonville%2C%20FL%2032223!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Footer Container -->
-        <footer class="container mx-auto text-center py-8 border-t border-gray-200 dark:border-gray-700 mt-10">
-            <div class="container">
-                <p data-lang="footer_text" class="text-text-secondary-light dark:text-text-secondary-dark">&copy; 2024 Aspire Haven Group Homes. All Rights Reserved.</p>
-            </div>
-        </footer>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- Device Preview Toolbar -->
+    <div id="device-preview-toolbar" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800/80 backdrop-blur-sm text-white p-2 rounded-full flex items-center space-x-2 shadow-lg z-50">
+        <button data-device="mobile" class="device-btn p-2 rounded-full hover:bg-gray-700">
+            <i data-lucide="smartphone" class="h-6 w-6"></i>
+        </button>
+        <button data-device="tablet" class="device-btn p-2 rounded-full hover:bg-gray-700">
+            <i data-lucide="tablet" class="h-6 w-6"></i>
+        </button>
+        <button data-device="desktop" class="device-btn p-2 rounded-full hover:bg-gray-700">
+            <i data-lucide="monitor" class="h-6 w-6"></i>
+        </button>
     </div>
 
-    <script>
-        lucide.createIcons();
 
+    <script>
         // --- CONTENT DICTIONARY ---
         const translations = {
             en: {
@@ -249,20 +361,32 @@
                 nav_location: 'Location',
                 nav_contact: 'Contact',
                 hero_title: 'A Caring & Supportive Home',
-                hero_subtitle: 'Providing exceptional residential care and support for individuals with intellectual and developmental disabilities in Jacksonville, Florida.',
+                hero_subtitle: 'Delivering comprehensive, person-centered care in a supportive environment for individuals with intellectual and developmental disabilities in Jacksonville, Florida.',
+                commitment_title: 'Our Commitment to Care',
+                commitment_text: 'We work hard to serve you and your loved ones. Our staff has many years of experience, and our high-quality care and dedication to the growth of our consumers best describes our main focus. We proudly offer high-quality support tailored to each individual\'s needs.',
                 services_title: 'Our Specialized Services',
                 services_subtitle: 'Dedicated care tailored to individual needs.',
-                service_1_title: 'Residential Treatment',
-                service_1_desc: 'For intellectual and/or developmental disabilities.',
-                service_2_title: 'Adult Companion',
-                service_2_desc: 'Providing friendship and support for daily activities.',
-                service_3_title: 'Assisted Living & Behavioral Care',
-                service_3_desc: 'Support for individuals with behavioral disturbances.',
-                service_4_title: 'Behavior Analyst',
-                service_4_desc: 'Professional analysis and behavior management plans.',
-                service_5_title: 'Community & Behavioral Health',
-                service_5_desc: 'Integrating residents into the community with health support.',
-                location_title: 'Find Us',
+                service_1_title: 'Residential Habilitation',
+                service_1_desc: 'Supportive living environments for intellectual and developmental disabilities.',
+                service_2_title: 'Behavioral Support',
+                service_2_desc: 'Professional analysis and management for behavioral disturbances.',
+                service_3_title: 'Life Skills Training',
+                service_3_desc: 'Developing essential skills for independence and daily living.',
+                service_4_title: 'Community Integration',
+                service_4_desc: 'Integrating residents into the community with health and social support.',
+                service_5_title: 'Respite Care',
+                service_5_desc: 'Providing short-term relief for primary caregivers.',
+                service_6_title: 'Transportation',
+                service_6_desc: 'Reliable transportation services for appointments and activities.',
+                waivers_title: 'Waivers & Funding',
+                waivers_subtitle: 'Flexible options to access our comprehensive care.',
+                waiver_1_title: 'HCBS Waiver',
+                waiver_1_desc: 'Supporting individuals with comprehensive home and community-based services.',
+                waiver_2_title: 'iBudget Florida Program',
+                waiver_2_desc: 'APD\'s program offering flexibility and choice in managing waiver services.',
+                waiver_3_title: 'Private Pay',
+                waiver_3_desc: 'Direct payment options are available for our range of support services.',
+                location_title: 'Find & Contact Us',
                 address_title: 'Our Location',
                 contact_title: 'Contact Information',
                 phone_label: 'Phone:',
@@ -282,20 +406,32 @@
                 nav_location: 'Ubicación',
                 nav_contact: 'Contacto',
                 hero_title: 'Un Hogar Cariñoso y de Apoyo',
-                hero_subtitle: 'Brindando atención y apoyo residencial excepcional para personas con discapacidades intelectuales y del desarrollo en Jacksonville, Florida.',
+                hero_subtitle: 'Ofreciendo atención integral y centrada en la persona en un ambiente de apoyo para personas con discapacidades intelectuales y del desarrollo en Jacksonville, Florida.',
+                commitment_title: 'Nuestro Compromiso con el Cuidado',
+                commitment_text: 'Trabajamos arduamente para servirle a usted y a sus seres queridos. Nuestro personal tiene muchos años de experiencia, y nuestro cuidado de alta calidad y dedicación al crecimiento de nuestros consumidores describe mejor nuestro enfoque principal. Ofrecemos con orgullo un apoyo de alta calidad adaptado a las necesidades de cada individuo.',
                 services_title: 'Nuestros Servicios Especializados',
                 services_subtitle: 'Atención dedicada y adaptada a las necesidades individuales.',
-                service_1_title: 'Tratamiento Residencial',
-                service_1_desc: 'Para discapacidades intelectuales y/o del desarrollo.',
-                service_2_title: 'Acompañante de Adultos',
-                service_2_desc: 'Brindando amistad y apoyo en las actividades diarias.',
-                service_3_title: 'Vida Asistida y Cuidado del Comportamiento',
-                service_3_desc: 'Apoyo para personas con alteraciones del comportamiento.',
-                service_4_title: 'Analista de Comportamiento',
-                service_4_desc: 'Análisis profesional y planes de manejo del comportamiento.',
-                service_5_title: 'Salud Comunitaria y Conductual',
-                service_5_desc: 'Integrando a los residentes en la comunidad con apoyo de salud.',
-                location_title: 'Encuéntranos',
+                service_1_title: 'Habilitación Residencial',
+                service_1_desc: 'Entornos de vida de apoyo para discapacidades intelectuales y del desarrollo.',
+                service_2_title: 'Apoyo Conductual',
+                service_2_desc: 'Análisis y manejo profesional para alteraciones del comportamiento.',
+                service_3_title: 'Capacitación en Habilidades para la Vida',
+                service_3_desc: 'Desarrollando habilidades esenciales para la independencia y la vida diaria.',
+                service_4_title: 'Integración Comunitaria',
+                service_4_desc: 'Integrando a los residentes en la comunidad con apoyo social y de salud.',
+                service_5_title: 'Cuidado de Relevo',
+                service_5_desc: 'Proporcionando alivio a corto plazo para los cuidadores principales.',
+                service_6_title: 'Transporte',
+                service_6_desc: 'Servicios de transporte confiables para citas y actividades.',
+                waivers_title: 'Exenciones y Financiamiento',
+                waivers_subtitle: 'Opciones flexibles para acceder a nuestro cuidado integral.',
+                waiver_1_title: 'Exención HCBS',
+                waiver_1_desc: 'Apoyando a individuos con servicios integrales basados en el hogar y la comunidad.',
+                waiver_2_title: 'Programa iBudget de Florida',
+                waiver_2_desc: 'Programa de la APD que ofrece flexibilidad y elección en la gestión de los servicios de exención.',
+                waiver_3_title: 'Pago Privado',
+                waiver_3_desc: 'Opciones de pago directo están disponibles para nuestra gama de servicios de apoyo.',
+                location_title: 'Encuéntranos y Contáctanos',
                 address_title: 'Nuestra Ubicación',
                 contact_title: 'Información de Contacto',
                 phone_label: 'Teléfono:',
@@ -311,90 +447,166 @@
             }
         };
 
-        // --- THEME TOGGLE LOGIC ---
-        const lightThemeBtn = document.getElementById('light-theme-btn');
-        const darkThemeBtn = document.getElementById('dark-theme-btn');
-        const sunIcon = lightThemeBtn.querySelector('i');
-        const moonIcon = darkThemeBtn.querySelector('i');
+        // All DOM manipulation and event listening should happen after the DOM is fully loaded.
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide icons, which replaces <i> tags with <svg>
+            lucide.createIcons();
 
-        const applyTheme = (theme) => {
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-                lightThemeBtn.classList.remove('bg-white', 'shadow');
-                darkThemeBtn.classList.add('bg-white', 'shadow');
-                sunIcon.classList.add('text-gray-400');
-                sunIcon.classList.remove('text-yellow-500');
-                moonIcon.classList.add('text-blue-500');
-                moonIcon.classList.remove('text-gray-400');
+            // --- ELEMENT SELECTORS ---
+            const lightThemeBtn = document.getElementById('light-theme-btn');
+            const darkThemeBtn = document.getElementById('dark-theme-btn');
+            const langEnBtn = document.getElementById('lang-en-btn');
+            const langEsBtn = document.getElementById('lang-es-btn');
+            const deviceBtns = document.querySelectorAll('.device-btn');
+            const previewWrapper = document.getElementById('preview-wrapper');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOpenIcon = document.getElementById('menu-open-icon');
+            const menuCloseIcon = document.getElementById('menu-close-icon');
+            const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+            const desktopNav = document.getElementById('desktop-nav');
+            const mobileMenuContainer = document.getElementById('mobile-menu-container');
 
-            } else {
-                document.documentElement.classList.remove('dark');
-                lightThemeBtn.classList.add('bg-white', 'shadow');
-                darkThemeBtn.classList.remove('bg-white', 'shadow');
-                sunIcon.classList.remove('text-gray-400');
-                sunIcon.classList.add('text-yellow-500');
-                moonIcon.classList.remove('text-blue-500');
-                moonIcon.classList.add('text-gray-400');
-            }
-        };
+            // --- THEME TOGGLE LOGIC ---
+            const applyTheme = (theme) => {
+                const sunIcon = lightThemeBtn.querySelector('svg');
+                const moonIcon = darkThemeBtn.querySelector('svg');
 
-        lightThemeBtn.addEventListener('click', () => {
-            localStorage.setItem('theme', 'light');
-            applyTheme('light');
-        });
+                if (!sunIcon || !moonIcon) { return; }
 
-        darkThemeBtn.addEventListener('click', () => {
-            localStorage.setItem('theme', 'dark');
-            applyTheme('dark');
-        });
-
-
-        // --- LANGUAGE TOGGLE LOGIC ---
-        const langEnBtn = document.getElementById('lang-en-btn');
-        const langEsBtn = document.getElementById('lang-es-btn');
-
-        const updateLanguage = (lang) => {
-            document.documentElement.lang = lang;
-            const elements = document.querySelectorAll('[data-lang]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-lang');
-                if (translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    lightThemeBtn.classList.remove('bg-white', 'shadow');
+                    darkThemeBtn.classList.add('bg-white', 'shadow');
+                    sunIcon.classList.add('text-gray-400');
+                    sunIcon.classList.remove('text-yellow-500');
+                    moonIcon.classList.add('text-blue-500');
+                    moonIcon.classList.remove('text-gray-400');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    lightThemeBtn.classList.add('bg-white', 'shadow');
+                    darkThemeBtn.classList.remove('bg-white', 'shadow');
+                    sunIcon.classList.remove('text-gray-400');
+                    sunIcon.classList.add('text-yellow-500');
+                    moonIcon.classList.remove('text-blue-500');
+                    moonIcon.classList.add('text-gray-400');
                 }
+            };
+
+            lightThemeBtn.addEventListener('click', () => {
+                localStorage.setItem('theme', 'light');
+                applyTheme('light');
+            });
+
+            darkThemeBtn.addEventListener('click', () => {
+                localStorage.setItem('theme', 'dark');
+                applyTheme('dark');
+            });
+
+            // --- LANGUAGE TOGGLE LOGIC ---
+            const updateLanguage = (lang) => {
+                document.documentElement.lang = lang;
+                const elements = document.querySelectorAll('[data-lang]');
+                elements.forEach(el => {
+                    const key = el.getAttribute('data-lang');
+                    if (translations[lang] && translations[lang][key]) {
+                        el.innerHTML = translations[lang][key];
+                    }
+                });
+                
+                if (lang === 'es') {
+                    langEnBtn.classList.remove('bg-white', 'shadow', 'text-gray-800');
+                    langEnBtn.classList.add('text-gray-400');
+                    langEsBtn.classList.add('bg-white', 'shadow', 'text-gray-800');
+                    langEsBtn.classList.remove('text-gray-400');
+                } else {
+                    langEsBtn.classList.remove('bg-white', 'shadow', 'text-gray-800');
+                    langEsBtn.classList.add('text-gray-400');
+                    langEnBtn.classList.add('bg-white', 'shadow', 'text-gray-800');
+                    langEnBtn.classList.remove('text-gray-400');
+                }
+            };
+
+            langEnBtn.addEventListener('click', () => {
+                localStorage.setItem('language', 'en');
+                updateLanguage('en');
+            });
+
+            langEsBtn.addEventListener('click', () => {
+                localStorage.setItem('language', 'es');
+                updateLanguage('es');
             });
             
-            if (lang === 'es') {
-                langEnBtn.classList.remove('bg-white', 'shadow', 'text-gray-800');
-                langEnBtn.classList.add('text-gray-400');
-                langEsBtn.classList.add('bg-white', 'shadow', 'text-gray-800');
-                langEsBtn.classList.remove('text-gray-400');
-            } else {
-                langEsBtn.classList.remove('bg-white', 'shadow', 'text-gray-800');
-                langEsBtn.classList.add('text-gray-400');
-                langEnBtn.classList.add('bg-white', 'shadow', 'text-gray-800');
-                langEnBtn.classList.remove('text-gray-400');
-            }
-        };
+            // --- MOBILE MENU TOGGLE ---
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                menuOpenIcon.classList.toggle('hidden');
+                menuCloseIcon.classList.toggle('hidden');
+            });
 
-        langEnBtn.addEventListener('click', () => {
-            localStorage.setItem('language', 'en');
-            updateLanguage('en');
-        });
+            // Close mobile menu when a link is clicked
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    menuOpenIcon.classList.remove('hidden');
+                    menuCloseIcon.classList.add('hidden');
+                });
+            });
 
-        langEsBtn.addEventListener('click', () => {
-            localStorage.setItem('language', 'es');
-            updateLanguage('es');
-        });
+            // --- DEVICE PREVIEW LOGIC ---
+            const handleNavLayoutForPreview = (device) => {
+                if (!desktopNav || !mobileMenuContainer) return;
 
-        // --- INITIALIZATION ON PAGE LOAD ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set initial theme
+                if (device === 'mobile' || device === 'tablet') {
+                    // In mobile/tablet preview, force the mobile navigation layout
+                    // by overriding Tailwind's responsive classes with inline styles.
+                    desktopNav.style.display = 'none';
+                    mobileMenuContainer.style.display = 'block';
+                } else { // device === 'desktop'
+                    // In desktop preview, remove inline styles to let Tailwind's
+                    // CSS classes control the layout for natural responsiveness.
+                    desktopNav.style.display = '';
+                    mobileMenuContainer.style.display = '';
+                    
+                    // Also, ensure the mobile menu is closed when switching to desktop preview
+                    mobileMenu.classList.add('hidden');
+                    menuOpenIcon.classList.remove('hidden');
+                    menuCloseIcon.classList.add('hidden');
+                }
+            };
+
+            deviceBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const device = btn.dataset.device;
+                    deviceBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    previewWrapper.classList.remove('preview-mobile', 'preview-tablet', 'preview-desktop');
+                    
+                    if (device === 'mobile') {
+                        previewWrapper.classList.add('preview-mobile');
+                    } else if (device === 'tablet') {
+                        previewWrapper.classList.add('preview-tablet');
+                    } else {
+                        previewWrapper.classList.add('preview-desktop');
+                    }
+
+                    handleNavLayoutForPreview(device);
+                });
+            });
+
+
+            // --- INITIALIZATION ---
             const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
 
-            // Set initial language
             const savedLang = localStorage.getItem('language') || 'en';
             updateLanguage(savedLang);
+
+            // Set desktop as default preview
+            previewWrapper.classList.add('preview-desktop');
+            document.querySelector('.device-btn[data-device="desktop"]').classList.add('active');
+            handleNavLayoutForPreview('desktop');
         });
 
     </script>
