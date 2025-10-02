@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,186 +9,47 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         /* Base styling */
-        
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden; /* Prevent horizontal scroll from device frames */
-            background-color: #F9FAFB; /* Light BG */
-        }
-        .dark body {
-            background-color: #111827; /* Dark BG */
+            color: #F9FAFB; /* Default text color to light gray for readability */
         }
         
         /* Smooth transitions for color changes */
         * {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
-        
-        /* Main content container */
-        #app-container {
-            transition: all 0.5s ease-in-out;
-            height: 100%;
-        }
-        
-        /* Device Preview Styles */
-        #preview-wrapper {
-            transition: all 0.5s ease-in-out;
-            padding-top: 2rem;
-            margin-left: auto;
-            margin-right: auto;
-            position: relative;
-        }
 
-        .device-btn.active {
-            background-color: #3B82F6; /* brand-light */
-            color: white;
+        /* Custom scrollbar for webkit browsers */
+        body::-webkit-scrollbar {
+            width: 8px;
         }
-        .dark .device-btn.active {
-            background-color: #60A5FA; /* brand-dark */
+        body::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
         }
-
-        /* --- Realistic Mobile Frame (iPhone 14 Pro inspired) --- */
-        .preview-mobile {
-            width: 393px;
-            height: 852px;
-            padding: 12px;
-            border: 4px solid #4a4a4a;
-            border-radius: 60px;
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4), inset 0 0 0 4px #000;
-            background: #111;
-        }
-        .preview-mobile #app-container-wrapper {
-            border-radius: 48px;
-            overflow: hidden;
-            height: 100%;
-            position: relative;
-            background: white; /* Fallback */
-        }
-        /* Dynamic Island/Notch */
-        .preview-mobile #app-container-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 140px;
-            height: 30px;
-            background: #111;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            z-index: 10;
-        }
-
-        /* --- Realistic Tablet Frame (iPad Air inspired) --- */
-        .preview-tablet {
-            width: 820px;
-            height: 1180px;
-            padding: 20px;
-            border: 4px solid #b6b6b6;
-            background: #1e1e1e;
-            border-radius: 36px;
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
-        }
-         .preview-tablet #app-container-wrapper {
-            border-radius: 16px;
-            overflow: hidden;
-            height: 100%;
-            background: white; /* Fallback */
-        }
-        .dark .preview-tablet {
-             border-color: #555;
-        }
-
-
-        /* --- Realistic Desktop Frame (Browser Window) --- */
-        .preview-desktop {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #d1d5db; /* Gray 300 */
-            border-radius: 0.75rem; /* 12px */
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            background: transparent;
-            padding: 0;
-        }
-        .preview-desktop #app-container-wrapper {
-            border-bottom-left-radius: 0.65rem;
-            border-bottom-right-radius: 0.65rem;
-            overflow: hidden;
-        }
-        /* Browser Header */
-        .preview-desktop::before {
-            content: '';
-            display: block;
-            height: 40px;
-            background-color: #F3F4F6; /* Gray 100 */
-            border-bottom: 1px solid #d1d5db; /* Gray 300 */
-            border-top-left-radius: 0.75rem;
-            border-top-right-radius: 0.75rem;
-            position: relative;
-        }
-        /* Browser Buttons */
-        .preview-desktop::after {
-            content: ' ';
-            display: block;
-            position: absolute;
-            top: 14px;
-            left: 16px;
-            width: 58px;
-            height: 12px;
-            background-image: radial-gradient(circle, #FF5F56 6px, transparent 6px), radial-gradient(circle, #FFBD2E 6px, transparent 6px), radial-gradient(circle, #27C93F 6px, transparent 6px);
-            background-position: 0 0, 18px 0, 36px 0;
-            background-repeat: no-repeat;
-        }
-        .dark .preview-desktop {
-             border-color: #4b5563; /* Gray 600 */
-        }
-        .dark .preview-desktop::before {
-            background-color: #374151; /* Gray 700 */
-            border-bottom-color: #4b5563; /* Gray 600 */
-        }
-        
-
-        /* Custom scrollbar for webkit browsers in preview */
-        #app-container::-webkit-scrollbar {
-            width: 6px;
-        }
-        #app-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        #app-container::-webkit-scrollbar-thumb {
-            background-color: rgba(156, 163, 175, 0.5); /* gray-400 with opacity */
+        body::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
             border-radius: 20px;
         }
+        
+        /* Glassmorphism card base style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.25rem; /* 20px */
+        }
+
     </style>
     <script>
         // Tailwind dark mode configuration
         tailwind.config = {
-            darkMode: 'class',
+            darkMode: 'class', // Keeping this in case you want to add a dark variant of glassmorphism later
             theme: {
                 extend: {
                     colors: {
                         brand: {
-                            light: '#3B82F6', // Blue 500
-                            dark: '#60A5FA',  // Blue 400
-                        },
-                        background: {
-                            light: '#F9FAFB', // Gray 50
-                            dark: '#111827'   // Gray 900
-                        },
-                        surface: {
-                            light: '#FFFFFF',
-                            dark: '#1F2937' // Gray 800
-                        },
-                        text: {
-                            primary: {
-                                light: '#1F2937', // Gray 800
-                                dark: '#F9FAFB'   // Gray 50
-                            },
-                            secondary: {
-                                light: '#6B7280', // Gray 500
-                                dark: '#9CA3AF'   // Gray 400
-                            }
+                            light: '#A5CFF8', // Lighter blue for better contrast on dark BG
+                            dark: '#60A5FA',
                         }
                     }
                 }
@@ -196,295 +57,285 @@
         }
     </script>
 </head>
-<body class="pb-24">
+<body class="bg-gray-900">
 
-    <!-- Preview Wrapper -->
-    <div id="preview-wrapper">
-        <div id="app-container-wrapper">
-            <!-- Main Container -->
-            <div id="app-container" class="w-full mx-auto bg-surface-light dark:bg-surface-dark overflow-y-auto">
+    <!-- Background Image -->
+    <div class="fixed inset-0 -z-10">
+        <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1470" class="w-full h-full object-cover" alt="Lush forest background">
+        <div class="absolute inset-0 bg-black/60"></div>
+    </div>
 
-                <!-- Header Container -->
-                <header class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 relative">
-                    <div class="flex justify-between items-center">
-                        <!-- Business Name/Brand Container -->
-                        <div class="container">
-                            <h1 data-lang="brand" class="text-xl md:text-3xl font-bold text-brand-light dark:text-brand-dark">Aspire Haven Group Homes</h1>
+    <!-- Main Container -->
+    <div id="app-container" class="w-full max-w-screen-2xl mx-auto">
+
+        <!-- Header Container -->
+        <header class="sticky top-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/20">
+            <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center">
+                    <!-- Business Name/Brand Container -->
+                    <div class="container">
+                        <h1 data-lang="brand" class="text-xl md:text-3xl font-bold text-white">Aspire Haven Group Homes</h1>
+                    </div>
+
+                    <!-- Menu and Toggles Container -->
+                    <div class="flex items-center space-x-4">
+                        <!-- Desktop Menu Tabs -->
+                        <nav id="desktop-nav" class="hidden md:flex space-x-1">
+                            <div class="container"><a href="#services" data-lang="nav_services" class="px-4 py-2 rounded-lg hover:bg-white/10">Services</a></div>
+                            <div class="container"><a href="#location" data-lang="nav_location" class="px-4 py-2 rounded-lg hover:bg-white/10">Location</a></div>
+                            <div class="container"><a href="#contact" data-lang="nav_contact" class="px-4 py-2 rounded-lg hover:bg-white/10">Contact</a></div>
+                        </nav>
+
+                        <!-- Toggles Wrapper -->
+                        <div class="flex items-center space-x-2 md:border-l md:border-white/20 md:pl-4">
+                             <!-- Language Toggle Container -->
+                            <div class="container flex items-center bg-black/30 p-1 rounded-full text-sm font-medium">
+                                <button id="lang-en-btn" class="px-3 py-1 rounded-full">EN</button>
+                                <button id="lang-es-btn" class="px-3 py-1 rounded-full">ES</button>
+                            </div>
                         </div>
 
-                        <!-- Menu and Toggles Container -->
-                        <div class="flex items-center space-x-2">
-                            <!-- Desktop Menu Tabs -->
-                            <nav id="desktop-nav" class="hidden md:flex space-x-2">
-                                <div class="container"><a href="#services" data-lang="nav_services" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Services</a></div>
-                                <div class="container"><a href="#location" data-lang="nav_location" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Location</a></div>
-                                <div class="container"><a href="#contact" data-lang="nav_contact" class="px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Contact</a></div>
-                            </nav>
+                        <!-- Mobile Menu Button -->
+                        <div class="md:hidden">
+                            <button id="mobile-menu-btn" class="p-2 rounded-md hover:bg-white/10">
+                                <i id="menu-open-icon" data-lucide="menu" class="h-6 w-6"></i>
+                                <i id="menu-close-icon" data-lucide="x" class="h-6 w-6 hidden"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                            <!-- Toggles Wrapper -->
-                            <div class="flex items-center space-x-2 md:border-l md:border-gray-200 md:dark:border-gray-700 md:pl-2">
-                                <!-- Theme Toggle Container -->
-                                <div class="container flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-full">
-                                    <button id="light-theme-btn" class="p-1.5 rounded-full">
-                                        <i data-lucide="sun" class="h-5 w-5 text-yellow-500"></i>
-                                    </button>
-                                    <button id="dark-theme-btn" class="p-1.5 rounded-full">
-                                        <i data-lucide="moon" class="h-5 w-5 text-gray-400"></i>
-                                    </button>
+                <!-- Mobile Menu (Dropdown) -->
+                <div id="mobile-menu" class="hidden md:hidden mt-4">
+                    <nav class="flex flex-col space-y-1">
+                        <a href="#services" data-lang="nav_services" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-white/10 text-base">Services</a>
+                        <a href="#location" data-lang="nav_location" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-white/10 text-base">Location</a>
+                        <a href="#contact" data-lang="nav_contact" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-white/10 text-base">Contact</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="mt-16">
+
+            <!-- Hero Section Container -->
+            <section class="container mx-auto text-center py-24 md:py-32 px-4 sm:px-6 lg:px-8">
+                <div class="container">
+                    <h2 data-lang="hero_title" class="text-4xl md:text-6xl font-bold text-white">A Caring & Supportive Home</h2>
+                </div>
+                <div class="container mt-4">
+                    <p data-lang="hero_subtitle" class="text-lg md:text-xl max-w-3xl mx-auto text-gray-300">
+                        Delivering comprehensive, person-centered care in a supportive environment for individuals with intellectual and developmental disabilities in Jacksonville, Florida.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Our Commitment Section -->
+            <section class="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+                <div class="text-center glass-card p-8 md:p-12">
+                    <div class="container">
+                        <h3 data-lang="commitment_title" class="text-3xl md:text-4xl font-bold text-white">Our Commitment to Care</h3>
+                    </div>
+                    <div class="container mt-4">
+                        <p data-lang="commitment_text" class="text-lg max-w-4xl mx-auto text-gray-300">
+                            We work hard to serve you and your loved ones. Our staff has many years of experience, and our high-quality care and dedication to the growth of our consumers best describes our main focus. We proudly offer high-quality support tailored to each individual's needs.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Our Services Section -->
+            <section id="services" class="py-16">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+                    <div class="text-center mb-12">
+                        <h3 data-lang="services_title" class="text-3xl md:text-4xl font-bold text-white">Our Services</h3>
+                        <p data-lang="services_subtitle" class="mt-2 text-gray-300">Clear, personalized support plans that fit real lives.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 text-white max-w-4xl mx-auto">
+                        <!-- Service Card 1: Companion & Life Skills -->
+                        <div class="container glass-card p-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="container glass-card p-2 rounded-lg w-fit">
+                                    <i data-lucide="heart-handshake" class="h-6 w-6"></i>
                                 </div>
-                                <!-- Language Toggle Container -->
-                                <div class="container flex items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-full text-sm font-medium">
-                                    <button id="lang-en-btn" class="px-3 py-1 rounded-full">EN</button>
-                                    <button id="lang-es-btn" class="px-3 py-1 rounded-full">ES</button>
+                                <div class="container glass-card px-4 py-2 rounded-lg">
+                                    <h4 data-lang="service_1_title" class="text-md font-semibold">Companion & Life Skills</h4>
                                 </div>
                             </div>
-
-                            <!-- Mobile Menu Button -->
-                            <div id="mobile-menu-container" class="md:hidden">
-                                <button id="mobile-menu-btn" class="p-2 rounded-md text-gray-500 dark:text-gray-400">
-                                    <i id="menu-open-icon" data-lucide="menu" class="h-6 w-6"></i>
-                                    <i id="menu-close-icon" data-lucide="x" class="h-6 w-6 hidden"></i>
-                                </button>
+                            <div class="container glass-card p-4 rounded-xl">
+                                <ul data-lang-list="service_1_list" class="space-y-2 text-gray-300 list-disc list-inside">
+                                    <li>Fostering independence</li>
+                                    <li>Daily living assistance</li>
+                                    <li>Community engagement</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Service Card 2: Residential Habilitation -->
+                        <div class="container glass-card p-6">
+                           <div class="flex items-center space-x-4 mb-4">
+                                <div class="container glass-card p-2 rounded-lg w-fit">
+                                    <i data-lucide="home" class="h-6 w-6"></i>
+                                </div>
+                                <div class="container glass-card px-4 py-2 rounded-lg">
+                                    <h4 data-lang="service_2_title" class="text-md font-semibold">Residential Habilitation</h4>
+                                </div>
+                            </div>
+                            <div class="container glass-card p-4 rounded-xl">
+                                <ul data-lang-list="service_2_list" class="space-y-2 text-gray-300 list-disc list-inside">
+                                     <li>Supportive living environment</li>
+                                     <li>Structured daily routines</li>
+                                     <li>Growth and development focus</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Service Card 3: Respite Care -->
+                        <div class="container glass-card p-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="container glass-card p-2 rounded-lg w-fit">
+                                    <i data-lucide="leaf" class="h-6 w-6"></i>
+                                </div>
+                                <div class="container glass-card px-4 py-2 rounded-lg">
+                                    <h4 data-lang="service_3_title" class="text-md font-semibold">Respite Care</h4>
+                                </div>
+                            </div>
+                            <div class="container glass-card p-4 rounded-xl">
+                                <ul data-lang-list="service_3_list" class="space-y-2 text-gray-300 list-disc list-inside">
+                                     <li>Short-term caregiver relief</li>
+                                     <li>Safe and supportive care</li>
+                                     <li>Flexible scheduling</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Service Card 4: Transportation -->
+                        <div class="container glass-card p-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="container glass-card p-2 rounded-lg w-fit">
+                                    <i data-lucide="car" class="h-6 w-6"></i>
+                                </div>
+                                <div class="container glass-card px-4 py-2 rounded-lg">
+                                    <h4 data-lang="service_4_title" class="text-md font-semibold">Transportation</h4>
+                                </div>
+                            </div>
+                            <div class="container glass-card p-4 rounded-xl">
+                                <ul data-lang-list="service_4_list" class="space-y-2 text-gray-300 list-disc list-inside">
+                                     <li>Safe and reliable transport</li>
+                                     <li>Medical appointments</li>
+                                     <li>Community outings</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <!-- Mobile Menu (Dropdown) -->
-                    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 z-40 px-4">
-                        <div class="mt-2 bg-surface-light dark:bg-surface-dark rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
-                            <nav class="flex flex-col space-y-1 p-2">
-                                <a href="#services" data-lang="nav_services" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-base">Services</a>
-                                <a href="#location" data-lang="nav_location" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-base">Location</a>
-                                <a href="#contact" data-lang="nav_contact" class="mobile-menu-link px-4 py-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-base">Contact</a>
-                            </nav>
-                        </div>
+            <!-- Waivers Section Container -->
+            <section class="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+                <div class="container text-center mb-12">
+                    <h3 data-lang="waivers_title" class="text-3xl md:text-4xl font-bold text-white">Waivers & Funding</h3>
+                    <p data-lang="waivers_subtitle" class="mt-2 text-gray-300">Flexible options to access our comprehensive care.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Waiver Item 1 -->
+                    <div class="container glass-card p-6 text-center">
+                        <div class="mx-auto bg-white/20 p-3 rounded-lg w-fit mb-4"><i data-lucide="file-text" class="h-8 w-8 text-brand-light"></i></div>
+                        <h4 data-lang="waiver_1_title" class="text-lg font-semibold">HCBS Waiver</h4>
+                        <p data-lang="waiver_1_desc" class="mt-3 text-gray-300">Supporting individuals with comprehensive home and community-based services.</p>
                     </div>
-                </header>
+                    <!-- Waiver Item 2 -->
+                    <div class="container glass-card p-6 text-center">
+                        <div class="mx-auto bg-white/20 p-3 rounded-lg w-fit mb-4"><i data-lucide="notebook-tabs" class="h-8 w-8 text-green-400"></i></div>
+                        <h4 data-lang="waiver_2_title" class="text-lg font-semibold">iBudget Florida Program</h4>
+                        <p data-lang="waiver_2_desc" class="mt-3 text-gray-300">APD's program offering flexibility and choice in managing waiver services.</p>
+                    </div>
+                    <!-- Waiver Item 3 -->
+                    <div class="container glass-card p-6 text-center">
+                        <div class="mx-auto bg-white/20 p-3 rounded-lg w-fit mb-4"><i data-lucide="credit-card" class="h-8 w-8 text-purple-400"></i></div>
+                        <h4 data-lang="waiver_3_title" class="text-lg font-semibold">Private Pay</h4>
+                        <p data-lang="waiver_3_desc" class="mt-3 text-gray-300">Direct payment options are available for our range of support services.</p>
+                    </div>
+                </div>
+            </section>
 
-                <!-- Main Content -->
-                <main class="mt-10 px-4 sm:px-6 lg:px-8">
 
-                    <!-- Hero Section Container -->
-                    <section class="container mx-auto text-center py-16 md:py-24">
-                        <div class="container">
-                            <h2 data-lang="hero_title" class="text-4xl md:text-6xl font-bold text-brand-light dark:text-brand-dark">A Caring & Supportive Home</h2>
-                        </div>
-                        <div class="container mt-4">
-                            <p data-lang="hero_subtitle" class="text-lg md:text-xl max-w-3xl mx-auto text-text-secondary-light dark:text-text-secondary-dark">
-                                Delivering comprehensive, person-centered care in a supportive environment for individuals with intellectual and developmental disabilities in Jacksonville, Florida.
-                            </p>
-                        </div>
-                    </section>
-
-                    <!-- Our Commitment Section -->
-                    <section class="container mx-auto py-16">
-                        <div class="text-center bg-white dark:bg-gray-800 p-8 md:p-12 rounded-xl shadow-md">
+            <!-- Location & Contact Section Container -->
+            <section id="location" class="container mx-auto pt-16 px-4 sm:px-6 lg:px-8">
+                <div class="container text-center mb-12">
+                    <h3 data-lang="location_title" class="text-3xl md:text-4xl font-bold">Find & Contact Us</h3>
+                </div>
+                <div class="glass-card overflow-hidden lg:grid lg:grid-cols-2 lg:gap-4">
+                    <div class="pt-10 pb-12 px-6 sm:pt-16 sm:px-12 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
+                        <div class="lg:self-center">
                             <div class="container">
-                                <h3 data-lang="commitment_title" class="text-3xl md:text-4xl font-bold">Our Commitment to Care</h3>
+                                <h4 data-lang="address_title" class="text-2xl font-bold">Our Location</h4>
+                                <p class="mt-2 text-lg leading-6 text-gray-300">12708 San Jose Blvd, Ste 1A<br>Jacksonville, FL 32223</p>
                             </div>
-                            <div class="container mt-4">
-                                <p data-lang="commitment_text" class="text-lg max-w-4xl mx-auto text-text-secondary-light dark:text-text-secondary-dark">
-                                    We work hard to serve you and your loved ones. Our staff has many years of experience, and our high-quality care and dedication to the growth of our consumers best describes our main focus. We proudly offer high-quality support tailored to each individual's needs.
+                            <div class="container mt-8" id="contact">
+                                <h4 data-lang="contact_title" class="text-2xl font-bold">Contact Information</h4>
+                                <p class="mt-2 text-lg text-gray-300">
+                                    <span data-lang="phone_label" class="font-semibold">Phone:</span> 770-318-2828<br>
+                                    <span data-lang="fax_label" class="font-semibold">Fax:</span> 888-846-6014
                                 </p>
                             </div>
-                        </div>
-                    </section>
 
-                     <!-- Our Services Section -->
-                    <section id="services" class="container mx-auto py-16">
-                        <div class="container text-center mb-12">
-                             <h3 data-lang="services_title" class="text-3xl md:text-4xl font-bold">Our Services</h3>
-                             <p data-lang="services_subtitle" class="mt-2 text-text-secondary-light dark:text-text-secondary-dark">Dedicated care tailored to individual needs.</p>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <!-- Service Item 1 -->
-                            <div class="container bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md flex items-start space-x-6">
-                                <div class="container">
-                                    <div class="bg-pink-100 dark:bg-pink-900/50 p-3 rounded-lg">
-                                        <i data-lucide="heart-handshake" class="h-8 w-8 text-pink-500 dark:text-pink-400"></i>
+                            <!-- Contact Form Container -->
+                            <div class="container mt-8">
+                                <h4 data-lang="form_title" class="text-2xl font-bold">Get in Touch</h4>
+                                <form action="https://formsubmit.co/AspireHavenGroup@gmail.com" method="POST" class="mt-4 space-y-4">
+                                    <div>
+                                        <label for="name" data-lang="form_name_label" class="block text-sm font-medium text-gray-300">Full Name</label>
+                                        <div class="mt-1">
+                                            <input type="text" name="name" id="name" autocomplete="name" class="block w-full rounded-md bg-white/5 border-white/20 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="John Doe" required>
+                                        </div>
                                     </div>
-                                </div>
-                                <div>
-                                    <div class="container">
-                                        <h4 data-lang="service_1_title" class="text-xl font-semibold">Companion Services</h4>
+                                    <div>
+                                        <label for="email" data-lang="form_email_label" class="block text-sm font-medium text-gray-300">Email Address</label>
+                                        <div class="mt-1">
+                                            <input type="email" name="email" id="email" autocomplete="email" class="block w-full rounded-md bg-white/5 border-white/20 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="you@example.com" required>
+                                        </div>
                                     </div>
-                                    <div class="container mt-2">
-                                        <p data-lang="service_1_desc" class="text-text-secondary-light dark:text-text-secondary-dark">Providing life skills training and companionship to foster independence and social engagement.</p>
+                                    <div>
+                                        <label for="message" data-lang="form_message_label" class="block text-sm font-medium text-gray-300">Message</label>
+                                        <div class="mt-1">
+                                            <textarea id="message" name="message" rows="4" class="block w-full rounded-md bg-white/5 border-white/20 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="Your message..." required></textarea>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div>
+                                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-dark hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-light">
+                                            <span data-lang="form_submit_btn">Send Message</span>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                            <!-- Service Item 2 -->
-                             <div class="container bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md flex items-start space-x-6">
-                                <div class="container">
-                                    <div class="bg-indigo-100 dark:bg-indigo-900/50 p-3 rounded-lg">
-                                        <i data-lucide="home" class="h-8 w-8 text-indigo-500 dark:text-indigo-400"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="container">
-                                        <h4 data-lang="service_2_title" class="text-xl font-semibold">Residential Habilitation</h4>
-                                    </div>
-                                    <div class="container mt-2">
-                                         <p data-lang="service_2_desc" class="text-text-secondary-light dark:text-text-secondary-dark">Creating a supportive and structured living environment for growth and development.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Service Item 3 -->
-                             <div class="container bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md flex items-start space-x-6">
-                                <div class="container">
-                                    <div class="bg-teal-100 dark:bg-teal-900/50 p-3 rounded-lg">
-                                        <i data-lucide="leaf" class="h-8 w-8 text-teal-500 dark:text-teal-400"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="container">
-                                        <h4 data-lang="service_3_title" class="text-xl font-semibold">Respite Care</h4>
-                                    </div>
-                                    <div class="container mt-2">
-                                         <p data-lang="service_3_desc" class="text-text-secondary-light dark:text-text-secondary-dark">Offering short-term relief for primary caregivers, ensuring continuous quality care for loved ones.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Service Item 4 -->
-                             <div class="container bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md flex items-start space-x-6">
-                                <div class="container">
-                                    <div class="bg-amber-100 dark:bg-amber-900/50 p-3 rounded-lg">
-                                        <i data-lucide="car" class="h-8 w-8 text-amber-500 dark:text-amber-400"></i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="container">
-                                        <h4 data-lang="service_4_title" class="text-xl font-semibold">Transportation</h4>
-                                    </div>
-                                    <div class="container mt-2">
-                                         <p data-lang="service_4_desc" class="text-text-secondary-light dark:text-text-secondary-dark">Providing reliable and safe transportation for appointments, community outings, and other essential travel.</p>
-                                    </div>
-                                </div>
+
+                            <div class="container mt-8 flex flex-col sm:flex-row gap-3">
+                                <a href="https://maps.apple.com/?address=12708,San%20Jose%20Blvd,Ste%201A,Jacksonville,FL,32223,United%20States" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-black bg-gray-200 hover:bg-white">
+                                    <i data-lucide="apple" class="h-5 w-5 mr-2"></i>
+                                    <span data-lang="apple_maps_btn">Apple Maps</span>
+                                </a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=12708+San+Jose+Blvd+Ste+1A,+Jacksonville,+FL+32223" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-dark hover:bg-brand-light">
+                                    <i data-lucide="map-pin" class="h-5 w-5 mr-2"></i>
+                                    <span data-lang="google_maps_btn">Google Maps</span>
+                                </a>
                             </div>
                         </div>
-                    </section>
-
-                    <!-- Waivers Section Container -->
-                    <section class="container mx-auto py-16">
-                        <div class="container text-center mb-12">
-                            <h3 data-lang="waivers_title" class="text-3xl md:text-4xl font-bold">Waivers & Funding</h3>
-                            <p data-lang="waivers_subtitle" class="mt-2 text-text-secondary-light dark:text-text-secondary-dark">Flexible options to access our comprehensive care.</p>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <!-- Waiver Item 1 -->
-                            <div class="container bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
-                                <div class="mx-auto bg-blue-100 dark:bg-blue-900/50 p-3 rounded-lg w-fit mb-4"><i data-lucide="file-text" class="h-8 w-8 text-brand-light dark:text-brand-dark"></i></div>
-                                <h4 data-lang="waiver_1_title" class="text-lg font-semibold">HCBS Waiver</h4>
-                                <p data-lang="waiver_1_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">Supporting individuals with comprehensive home and community-based services.</p>
-                            </div>
-                            <!-- Waiver Item 2 -->
-                            <div class="container bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
-                                <div class="mx-auto bg-green-100 dark:bg-green-900/50 p-3 rounded-lg w-fit mb-4"><i data-lucide="notebook-tabs" class="h-8 w-8 text-green-500 dark:text-green-400"></i></div>
-                                <h4 data-lang="waiver_2_title" class="text-lg font-semibold">iBudget Florida Program</h4>
-                                <p data-lang="waiver_2_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">APD's program offering flexibility and choice in managing waiver services.</p>
-                            </div>
-                            <!-- Waiver Item 3 -->
-                            <div class="container bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
-                                <div class="mx-auto bg-purple-100 dark:bg-purple-900/50 p-3 rounded-lg w-fit mb-4"><i data-lucide="credit-card" class="h-8 w-8 text-purple-500 dark:text-purple-400"></i></div>
-                                <h4 data-lang="waiver_3_title" class="text-lg font-semibold">Private Pay</h4>
-                                <p data-lang="waiver_3_desc" class="mt-3 text-text-secondary-light dark:text-text-secondary-dark">Direct payment options are available for our range of support services.</p>
-                            </div>
-                        </div>
-                    </section>
-
-
-                    <!-- Location & Contact Section Container -->
-                    <section id="location" class="container mx-auto pt-16">
-                        <div class="container text-center mb-12">
-                            <h3 data-lang="location_title" class="text-3xl md:text-4xl font-bold">Find & Contact Us</h3>
-                        </div>
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden lg:grid lg:grid-cols-2 lg:gap-4">
-                            <div class="pt-10 pb-12 px-6 sm:pt-16 sm:px-12 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
-                                <div class="lg:self-center">
-                                    <div class="container">
-                                        <h4 data-lang="address_title" class="text-2xl font-bold">Our Location</h4>
-                                        <p class="mt-2 text-lg leading-6 text-text-secondary-light dark:text-text-secondary-dark">12708 San Jose Blvd, Ste 1A<br>Jacksonville, FL 32223</p>
-                                    </div>
-                                    <div class="container mt-8" id="contact">
-                                        <h4 data-lang="contact_title" class="text-2xl font-bold">Contact Information</h4>
-                                        <p class="mt-2 text-lg text-text-secondary-light dark:text-text-secondary-dark">
-                                            <span data-lang="phone_label" class="font-semibold">Phone:</span> 770-318-2828<br>
-                                            <span data-lang="fax_label" class="font-semibold">Fax:</span> 888-846-6014
-                                        </p>
-                                    </div>
-
-                                    <!-- Contact Form Container -->
-                                    <div class="container mt-8">
-                                        <h4 data-lang="form_title" class="text-2xl font-bold">Get in Touch</h4>
-                                        <form action="https://formsubmit.co/AspireHavenGroup@gmail.com" method="POST" class="mt-4 space-y-4">
-                                            <div>
-                                                <label for="name" data-lang="form_name_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Full Name</label>
-                                                <div class="mt-1">
-                                                    <input type="text" name="name" id="name" autocomplete="name" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="John Doe" required>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label for="email" data-lang="form_email_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Email Address</label>
-                                                <div class="mt-1">
-                                                    <input type="email" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="you@example.com" required>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label for="message" data-lang="form_message_label" class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">Message</label>
-                                                <div class="mt-1">
-                                                    <textarea id="message" name="message" rows="4" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-brand-light focus:ring-brand-light sm:text-sm" placeholder="Your message..." required></textarea>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-light hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-light dark:bg-brand-dark dark:hover:bg-blue-500">
-                                                    <span data-lang="form_submit_btn">Send Message</span>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="container mt-8 flex flex-col sm:flex-row gap-3">
-                                        <a href="https://maps.apple.com/?address=12708,San%20Jose%20Blvd,Ste%201A,Jacksonville,FL,32223,United%20States" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-white">
-                                            <i data-lucide="apple" class="h-5 w-5 mr-2"></i>
-                                            <span data-lang="apple_maps_btn">Apple Maps</span>
-                                        </a>
-                                        <a href="https://www.google.com/maps/search/?api=1&query=12708+San+Jose+Blvd+Ste+1A,+Jacksonville,+FL+32223" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-light hover:bg-blue-700 dark:bg-brand-dark dark:hover:bg-blue-500">
-                                            <i data-lucide="map-pin" class="h-5 w-5 mr-2"></i>
-                                            <span data-lang="google_maps_btn">Google Maps</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="aspect-w-5 aspect-h-3 md:aspect-w-2 md:aspect-h-1 lg:aspect-h-3 lg:aspect-w-2">
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3448.910398863643!2d-81.6212168853755!3d30.182559781831037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e5cb8e3e4a2e5f%3A0x8d5c48b7f8303358!2s12708%20San%20Jose%20Blvd%20%231a%2C%20Jacksonville%2C%20FL%2032223!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                            </div>
-                        </div>
-                    </section>
-                </main>
-
-                <!-- Footer Container -->
-                <footer class="container mx-auto text-center py-8 border-t border-gray-200 dark:border-gray-700 mt-10">
-                    <div class="container">
-                        <p data-lang="footer_text" class="text-text-secondary-light dark:text-text-secondary-dark">&copy; 2024 Aspire Haven Group Homes. All Rights Reserved.</p>
                     </div>
-                </footer>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Device Preview Toolbar -->
-    <div id="device-preview-toolbar" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800/80 backdrop-blur-sm text-white p-2 rounded-full flex items-center space-x-2 shadow-lg z-50">
-        <button data-device="mobile" class="device-btn p-2 rounded-full hover:bg-gray-700">
-            <i data-lucide="smartphone" class="h-6 w-6"></i>
-        </button>
-        <button data-device="tablet" class="device-btn p-2 rounded-full hover:bg-gray-700">
-            <i data-lucide="tablet" class="h-6 w-6"></i>
-        </button>
-        <button data-device="desktop" class="device-btn p-2 rounded-full hover:bg-gray-700">
-            <i data-lucide="monitor" class="h-6 w-6"></i>
-        </button>
-    </div>
+                    <div class="aspect-w-5 aspect-h-3 md:aspect-w-2 md:aspect-h-1 lg:aspect-h-3 lg:aspect-w-2">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3448.910398863643!2d-81.6212168853755!3d30.182559781831037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e5cb8e3e4a2e5f%3A0x8d5c48b7f8303358!2s12708%20San%20Jose%20Blvd%20%231a%2C%20Jacksonville%2C%20FL%2032223!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none"></iframe>
+                    </div>
+                </div>
+            </section>
+        </main>
 
+        <!-- Footer Container -->
+        <footer class="container mx-auto text-center py-8 border-t border-white/20 mt-16">
+            <div class="container">
+                <p data-lang="footer_text" class="text-gray-400">&copy; 2024 Aspire Haven Group Homes. All Rights Reserved.</p>
+                <p class="text-gray-500 text-sm mt-2">Designed by <a href="https://codeamani.com" target="_blank" rel="noopener noreferrer" class="underline hover:text-white transition-colors">codeAmani Solutions</a></p>
+            </div>
+        </footer>
+    </div>
 
     <script>
         // --- CONTENT DICTIONARY ---
@@ -499,15 +350,15 @@
                 commitment_title: 'Our Commitment to Care',
                 commitment_text: 'We work hard to serve you and your loved ones. Our staff has many years of experience, and our high-quality care and dedication to the growth of our consumers best describes our main focus. We proudly offer high-quality support tailored to each individual\'s needs.',
                 services_title: 'Our Services',
-                services_subtitle: 'Dedicated care tailored to individual needs.',
-                service_1_title: 'Companion Services',
-                service_1_desc: 'Providing life skills training and companionship to foster independence and social engagement.',
+                services_subtitle: 'Clear, personalized support plans that fit real lives.',
+                service_1_title: 'Companion & Life Skills',
+                service_1_list: ['Fostering independence', 'Daily living assistance', 'Community engagement'],
                 service_2_title: 'Residential Habilitation',
-                service_2_desc: 'Creating a supportive and structured living environment for growth and development.',
+                service_2_list: ['Supportive living environment', 'Structured daily routines', 'Growth and development focus'],
                 service_3_title: 'Respite Care',
-                service_3_desc: 'Offering short-term relief for primary caregivers, ensuring continuous quality care for loved ones.',
+                service_3_list: ['Short-term caregiver relief', 'Safe and supportive care', 'Flexible scheduling'],
                 service_4_title: 'Transportation',
-                service_4_desc: 'Providing reliable and safe transportation for appointments, community outings, and other essential travel.',
+                service_4_list: ['Safe and reliable transport', 'Medical appointments', 'Community outings'],
                 waivers_title: 'Waivers & Funding',
                 waivers_subtitle: 'Flexible options to access our comprehensive care.',
                 waiver_1_title: 'HCBS Waiver',
@@ -540,15 +391,15 @@
                 commitment_title: 'Nuestro Compromiso con el Cuidado',
                 commitment_text: 'Trabajamos arduamente para servirle a usted y a sus seres queridos. Nuestro personal tiene muchos años de experiencia, y nuestro cuidado de alta calidad y dedicación al crecimiento de nuestros consumidores describe mejor nuestro enfoque principal. Ofrecemos con orgullo un apoyo de alta calidad adaptado a las necesidades de cada individuo.',
                 services_title: 'Nuestros Servicios',
-                services_subtitle: 'Atención dedicada y adaptada a las necesidades individuales.',
-                service_1_title: 'Servicios de Acompañamiento',
-                service_1_desc: 'Proporcionar capacitación en habilidades para la vida y compañía para fomentar la independencia y la participación social.',
+                services_subtitle: 'Planes de apoyo claros y personalizados que se adaptan a la vida real.',
+                service_1_title: 'Servicios de Acompañamiento y Habilidades para la Vida',
+                service_1_list: ['Fomentando la independencia', 'Asistencia en la vida diaria', 'Participación comunitaria'],
                 service_2_title: 'Habilitación Residencial',
-                service_2_desc: 'Crear un entorno de vida estructurado y de apoyo para el crecimiento y el desarrollo.',
-                service_3_title: 'Cuidado de Relevo',
-                service_3_desc: 'Ofrecer alivio a corto plazo para los cuidadores principales, garantizando un cuidado continuo y de calidad para los seres queridos.',
+                service_2_list: ['Entorno de vida de apoyo', 'Rutinas diarias estructuradas', 'Enfoque en el crecimiento y desarrollo'],
+                service_3_title: 'Cuidado de Respiro',
+                service_3_list: ['Alivio a corto plazo para cuidadores', 'Cuidado seguro y de apoyo', 'Horarios flexibles'],
                 service_4_title: 'Transporte',
-                service_4_desc: 'Proporcionar transporte seguro y confiable para citas, salidas comunitarias y otros viajes esenciales.',
+                service_4_list: ['Transporte seguro y confiable', 'Citas médicas', 'Salidas comunitarias'],
                 waivers_title: 'Exenciones y Financiamiento',
                 waivers_subtitle: 'Opciones flexibles para acceder a nuestro cuidado integral.',
                 waiver_1_title: 'Exención HCBS',
@@ -579,55 +430,13 @@
             lucide.createIcons();
 
             // --- ELEMENT SELECTORS ---
-            const lightThemeBtn = document.getElementById('light-theme-btn');
-            const darkThemeBtn = document.getElementById('dark-theme-btn');
             const langEnBtn = document.getElementById('lang-en-btn');
             const langEsBtn = document.getElementById('lang-es-btn');
-            const deviceBtns = document.querySelectorAll('.device-btn');
-            const previewWrapper = document.getElementById('preview-wrapper');
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
             const menuOpenIcon = document.getElementById('menu-open-icon');
             const menuCloseIcon = document.getElementById('menu-close-icon');
             const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
-            const desktopNav = document.getElementById('desktop-nav');
-            const mobileMenuContainer = document.getElementById('mobile-menu-container');
-
-            // --- THEME TOGGLE LOGIC ---
-            const applyTheme = (theme) => {
-                const sunIcon = lightThemeBtn.querySelector('svg');
-                const moonIcon = darkThemeBtn.querySelector('svg');
-
-                if (!sunIcon || !moonIcon) { return; }
-
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                    lightThemeBtn.classList.remove('bg-white', 'shadow');
-                    darkThemeBtn.classList.add('bg-white', 'shadow');
-                    sunIcon.classList.add('text-gray-400');
-                    sunIcon.classList.remove('text-yellow-500');
-                    moonIcon.classList.add('text-blue-500');
-                    moonIcon.classList.remove('text-gray-400');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    lightThemeBtn.classList.add('bg-white', 'shadow');
-                    darkThemeBtn.classList.remove('bg-white', 'shadow');
-                    sunIcon.classList.remove('text-gray-400');
-                    sunIcon.classList.add('text-yellow-500');
-                    moonIcon.classList.remove('text-blue-500');
-                    moonIcon.classList.add('text-gray-400');
-                }
-            };
-
-            lightThemeBtn.addEventListener('click', () => {
-                localStorage.setItem('theme', 'light');
-                applyTheme('light');
-            });
-
-            darkThemeBtn.addEventListener('click', () => {
-                localStorage.setItem('theme', 'dark');
-                applyTheme('dark');
-            });
 
             // --- LANGUAGE TOGGLE LOGIC ---
             const updateLanguage = (lang) => {
@@ -640,15 +449,29 @@
                     }
                 });
                 
+                // Handle list translations separately
+                const listElements = document.querySelectorAll('[data-lang-list]');
+                listElements.forEach(ul => {
+                    const key = ul.getAttribute('data-lang-list');
+                    if (translations[lang] && translations[lang][key] && Array.isArray(translations[lang][key])) {
+                        ul.innerHTML = ''; // Clear existing items
+                        translations[lang][key].forEach(itemText => {
+                            const li = document.createElement('li');
+                            li.textContent = itemText;
+                            ul.appendChild(li);
+                        });
+                    }
+                });
+                
                 if (lang === 'es') {
-                    langEnBtn.classList.remove('bg-white', 'shadow', 'text-gray-800');
+                    langEnBtn.classList.remove('bg-white', 'shadow', 'text-white');
                     langEnBtn.classList.add('text-gray-400');
-                    langEsBtn.classList.add('bg-white', 'shadow', 'text-gray-800');
+                    langEsBtn.classList.add('bg-white', 'shadow', 'text-black');
                     langEsBtn.classList.remove('text-gray-400');
                 } else {
-                    langEsBtn.classList.remove('bg-white', 'shadow', 'text-gray-800');
+                    langEsBtn.classList.remove('bg-white', 'shadow', 'text-black');
                     langEsBtn.classList.add('text-gray-400');
-                    langEnBtn.classList.add('bg-white', 'shadow', 'text-gray-800');
+                    langEnBtn.classList.add('bg-white', 'shadow', 'text-black');
                     langEnBtn.classList.remove('text-gray-400');
                 }
             };
@@ -679,82 +502,14 @@
                 });
             });
 
-            // --- DEVICE PREVIEW LOGIC ---
-            const handleNavLayoutForPreview = (device) => {
-                if (!desktopNav || !mobileMenuContainer) return;
-
-                if (device === 'mobile' || device === 'tablet') {
-                    // In mobile/tablet preview, force the mobile navigation layout
-                    desktopNav.classList.add('hidden');
-                    desktopNav.classList.remove('md:flex');
-                    mobileMenuContainer.classList.remove('md:hidden');
-                } else { // device === 'desktop'
-                    // In desktop preview, let Tailwind's classes control layout
-                    desktopNav.classList.remove('hidden');
-                    desktopNav.classList.add('md:flex');
-                    mobileMenuContainer.classList.add('md:hidden');
-                    
-                    // Also, ensure the mobile menu is closed when switching to desktop preview
-                    mobileMenu.classList.add('hidden');
-                    menuOpenIcon.classList.remove('hidden');
-                    menuCloseIcon.classList.add('hidden');
-                }
-            };
-
-            deviceBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const device = btn.dataset.device;
-                    deviceBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-
-                    previewWrapper.classList.remove('preview-mobile', 'preview-tablet', 'preview-desktop');
-                    
-                    if (device === 'mobile') {
-                        previewWrapper.classList.add('preview-mobile');
-                    } else if (device === 'tablet') {
-                        previewWrapper.classList.add('preview-tablet');
-                    } else {
-                        previewWrapper.classList.add('preview-desktop');
-                    }
-
-                    handleNavLayoutForPreview(device);
-                });
-            });
-
-
             // --- INITIALIZATION ---
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            applyTheme(savedTheme);
-
             const savedLang = localStorage.getItem('language') || 'en';
             updateLanguage(savedLang);
-            
-            // --- AUTO-DETECT AND SET INITIAL DEVICE PREVIEW ---
-            const detectAndSetDevice = () => {
-                const screenWidth = window.innerWidth;
-                let defaultDevice = 'desktop';
 
-                // Using common breakpoints to determine device type
-                if (screenWidth <= 768) { // Mobile devices
-                    defaultDevice = 'mobile';
-                } else if (screenWidth <= 1024) { // Tablet devices
-                    defaultDevice = 'tablet';
-                }
-                
-                // Find the button for the detected device and programmatically click it
-                const defaultDeviceButton = document.querySelector(`.device-btn[data-device="${defaultDevice}"]`);
-                if (defaultDeviceButton) {
-                    defaultDeviceButton.click();
-                } else {
-                    // Fallback to desktop if the button isn't found for some reason
-                    document.querySelector('.device-btn[data-device="desktop"]').click();
-                }
-            };
-
-            detectAndSetDevice();
         });
 
     </script>
 </body>
 </html>
+
 
